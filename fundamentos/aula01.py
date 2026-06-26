@@ -10,8 +10,8 @@ mensagem = saudar("Ronielli")
 print(mensagem)
 
 # Tipos básicos
-idade = 30  # int
-altura = 1.75  # float
+idade = 32  # int
+altura = 1.74  # float
 ativo = True  # bool (maiúsculo!)
 nada = None  # equivale a null
 
