@@ -1,0 +1,26 @@
+# pyproject.toml — equivalente ao package.json + configs do mundo JS
+# Aqui mora a config do Ruff (nosso "ESLint + Prettier")
+
+[tool.ruff]
+# Comprimento máximo de linha (padrão do Black é 88)
+line-length = 88
+# Versão de Python que o código deve suportar
+target-version = "py313"
+
+[tool.ruff.lint]
+# Conjuntos de regras ativados. Cada letra é uma "família" de checagens:
+select = [
+    "E",   # pycodestyle errors (espaçamento, etc — o "estilo" da PEP 8)
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes (variáveis não usadas, imports faltando, bugs reais)
+    "I",   # isort (ordena os imports automaticamente)
+    "N",   # pep8-naming (te obriga a usar snake_case! 👀)
+    "UP",  # pyupgrade (sugere sintaxe mais moderna)
+    "B",   # flake8-bugbear (pega armadilhas comuns, tipo o default mutável)
+    "SIM", # flake8-simplify (sugere simplificações)
+]
+ignore = []
+
+[tool.ruff.format]
+# Estilo de aspas: "double" = aspas duplas (igual ao Prettier)
+quote-style = "double"

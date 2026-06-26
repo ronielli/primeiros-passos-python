@@ -1,0 +1,21 @@
+{
+  // Usa o Python do nosso venv (e não o global)
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+
+  // Configurações específicas para arquivos Python
+  "[python]": {
+    // Formatar com o Ruff toda vez que salvar
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+
+    // Ao salvar, também: organizar imports e aplicar os --fix do lint
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "explicit",
+      "source.organizeImports.ruff": "explicit"
+    }
+  },
+
+  // Corretor ortográfico (cSpell): reconhece inglês E português do Brasil,
+  // assim os comentários em pt-BR param de aparecer como "Unknown word".
+  "cSpell.language": "en,pt,pt_BR"
+}
