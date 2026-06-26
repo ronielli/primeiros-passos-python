@@ -1,0 +1,22 @@
+# .pre-commit-config.yaml — checagens automáticas antes de cada "git commit"
+# (equivalente ao Husky + lint-staged do mundo JS)
+# Ative uma vez com:  uv run pre-commit install
+
+repos:
+  # Higiene básica de arquivos
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace      # remove espaços no fim das linhas
+      - id: end-of-file-fixer        # garante uma linha em branco no fim
+      - id: check-yaml               # valida arquivos .yaml
+      - id: check-toml               # valida o pyproject.toml
+      - id: check-added-large-files  # impede commitar arquivos gigantes
+
+  # Ruff: lint + format (a estrela do show)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.20
+    hooks:
+      - id: ruff          # roda o lint, com --fix
+        args: [--fix]
+      - id: ruff-format   # roda o formatter

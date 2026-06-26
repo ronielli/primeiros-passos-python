@@ -1,26 +1,66 @@
-# pyproject.toml — equivalente ao package.json + configs do mundo JS
-# Aqui mora a config do Ruff (nosso "ESLint + Prettier")
+# ============================================================================
+# pyproject.toml — o "package.json" do Python (metadados + deps + config das ferramentas)
+# ============================================================================
 
+# --- Metadados do projeto (igual ao topo do package.json) -------------------
+[project]
+name = "estudos"
+version = "0.1.0"
+description = "Projeto de estudos de Python (backend), vindo de JavaScript"
+readme = "README.md"
+requires-python = ">=3.13"
+# Dependências de produção entram aqui (ex: "fastapi>=0.110"). Vazio por enquanto.
+dependencies = []
+
+# --- Dependências de desenvolvimento (igual ao devDependencies) -------------
+# Ferramentas que só usamos para desenvolver, não para rodar em produção.
+[dependency-groups]
+dev = [
+    "ruff>=0.15",      # linter + formatter
+    "mypy>=1.13",      # type checker (nosso "tsc")
+    "pytest>=8.0",     # framework de testes (nosso "jest")
+    "pre-commit>=4.0", # roda checagens antes de cada commit (nosso "husky")
+]
+
+# ============================================================================
+# Config das ferramentas (cada [tool.xxx] é a config de uma ferramenta)
+# ============================================================================
+
+# --- Ruff: linter + formatter -----------------------------------------------
 [tool.ruff]
-# Comprimento máximo de linha (padrão do Black é 88)
 line-length = 88
-# Versão de Python que o código deve suportar
 target-version = "py313"
 
 [tool.ruff.lint]
-# Conjuntos de regras ativados. Cada letra é uma "família" de checagens:
 select = [
-    "E",   # pycodestyle errors (espaçamento, etc — o "estilo" da PEP 8)
+    "E",   # pycodestyle errors (espaçamento, estilo da PEP 8)
     "W",   # pycodestyle warnings
     "F",   # pyflakes (variáveis não usadas, imports faltando, bugs reais)
-    "I",   # isort (ordena os imports automaticamente)
-    "N",   # pep8-naming (te obriga a usar snake_case! 👀)
-    "UP",  # pyupgrade (sugere sintaxe mais moderna)
-    "B",   # flake8-bugbear (pega armadilhas comuns, tipo o default mutável)
-    "SIM", # flake8-simplify (sugere simplificações)
+    "I",   # isort (ordena imports)
+    "N",   # pep8-naming (força snake_case)
+    "UP",  # pyupgrade (sintaxe mais moderna)
+    "B",   # flake8-bugbear (armadilhas comuns)
+    "SIM", # flake8-simplify (simplificações)
 ]
 ignore = []
 
+[tool.ruff.lint.per-file-ignores]
+# Nos exercícios, liberamos coisas didáticas que num projeto real seriam avisos:
+"exercicio*.py" = ["B018"]  # permite "expressões soltas" para testar no REPL
+"aula*.py" = ["B018"]
+
 [tool.ruff.format]
-# Estilo de aspas: "double" = aspas duplas (igual ao Prettier)
 quote-style = "double"
+
+# --- mypy: type checker (valida os type hints, como o TypeScript) -----------
+[tool.mypy]
+python_version = "3.13"
+# Modo gradual e amigável para quem está começando:
+warn_return_any = true       # avisa se uma função retorna "Any" sem querer
+warn_unused_ignores = true   # avisa se você tem um "# type: ignore" desnecessário
+ignore_missing_imports = true # não reclama de libs sem type hints
+
+# --- pytest: framework de testes --------------------------------------------
+[tool.pytest.ini_options]
+testpaths = ["tests"]        # onde procurar testes
+python_files = ["test_*.py"] # nomes de arquivo que contam como teste

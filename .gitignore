@@ -1,4 +1,17 @@
-# O venv NUNCA vai pro git (igual node_modules)
+# Ambiente virtual (NUNCA vai pro git, igual node_modules)
 .venv/
+
+# Caches do Python
 __pycache__/
 *.pyc
+
+# Caches das ferramentas
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+
+# Variáveis de ambiente com segredos (senhas, tokens, etc)
+.env
+
+# Arquivos do sistema operacional / editor
+.DS_Store
