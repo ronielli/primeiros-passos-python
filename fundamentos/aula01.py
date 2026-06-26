@@ -6,7 +6,7 @@ def saudar(nome):
 
 
 # Em Python não há "main" obrigatório, o código roda de cima pra baixo
-mensagem = saudar("Roniel")
+mensagem = saudar("Ronielli")
 print(mensagem)
 
 # Tipos básicos
