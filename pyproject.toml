@@ -45,9 +45,8 @@ select = [
 ignore = []
 
 [tool.ruff.lint.per-file-ignores]
-# Nos exercícios, liberamos coisas didáticas que num projeto real seriam avisos:
-"exercicio*.py" = ["B018"]  # permite "expressões soltas" para testar no REPL
-"aula*.py" = ["B018"]
+# Nos materiais de estudo, liberamos coisas didáticas que num projeto real seriam avisos:
+"fundamentos/*" = ["B018"]  # permite "expressões soltas" para testar no REPL
 
 [tool.ruff.format]
 quote-style = "double"
