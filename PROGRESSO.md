@@ -39,10 +39,11 @@ uv run pre-commit install    # reativa os hooks de pré-commit
 | 6 | Módulos e pacotes: módulo vs pacote, `__init__.py` (re-export/fachada), import absoluto vs relativo (`from .x import`), `if __name__` | ✅ |
 | 7 | Decorators: função como objeto, `@` = açúcar p/ `f = deco(f)`, wrapper com `*args/**kwargs`, decorator COM argumento (3 camadas), `functools.wraps` | ✅ |
 | 8 | 🎯 Primeira API com FastAPI: `@app.get/post`, path param tipado, request body com Pydantic (`BaseModel`), `HTTPException(404)`, `status_code=201`, validação 422 automática, doc `/docs` | ✅ |
+| 9 | CRUD completo + organização: `PUT`/`DELETE`, `204 No Content`, `response_model` (DTO de saída, filtra campos), `APIRouter` + `include_router` (rotas em módulo próprio) | ✅ |
 
 Exercícios resolvidos em `fundamentos/` (cada um tem `.md` com o enunciado + `.py`
-com a solução): **exercicio01 a exercicio09**, + exercicio10 (`.md`) = a **API** em
-`fundamentos/api/main.py` (CRUD de tarefas em memória).
+com a solução): **exercicio01 a exercicio09**, + exercicio10/11 (`.md`) = a **API** em
+`fundamentos/api/` (CRUD completo de tarefas em memória, organizado com `APIRouter`).
 
 Já praticado na prática: `import` entre arquivos, organização em **pacote** (`banco/`
 com `conta.py` + `tipos.py` + `__init__.py` re-exportando), os dois estilos de import
@@ -61,17 +62,14 @@ para separar "código que roda" de "código importável".
 
 ## Próximo passo
 
-➡️ **Aula 9 — Completar o CRUD + organizar a API**. A API hoje só tem GET (lista/um)
-e POST. Próximos temas, na ordem:
-1. **`PUT /tarefas/{id}`** (atualizar) e **`DELETE /tarefas/{id}`** (remover) — fecha o
-   CRUD. Praticar `status_code=204` no delete e 404 quando não existe.
-2. **`response_model`** (modelo Pydantic de saída) — controlar/validar o que a API
-   devolve, não só o que recebe.
-3. **Organizar com `APIRouter`** — separar as rotas de tarefas num módulo próprio
-   (`api/routers/tarefas.py`), aplicando o que aprendeu de pacotes/módulos.
-
-Depois disso: 🗄️ **persistência de verdade** (banco) — provavelmente SQLite +
-SQLModel/SQLAlchemy, saindo da lista "em memória".
+➡️ 🗄️ **Aula 10 — Banco de dados (persistência de verdade)**. Hoje as tarefas vivem
+numa lista em memória — somem quando o servidor reinicia. Próximos temas:
+1. **SQLite + SQLModel** (`uv add sqlmodel`) — SQLModel junta Pydantic + SQLAlchemy,
+   então o modelo de tabela é quase igual aos `BaseModel` que ele já conhece.
+2. Definir a tabela `Tarefa`, criar o engine e a sessão (`Session`).
+3. Trocar a lista em memória por queries reais: `session.add`, `session.get`,
+   `select(...)`, `session.delete`, `session.commit`.
+4. **Injeção de dependência** do FastAPI (`Depends`) para entregar a sessão às rotas.
 
 > A API atual roda com: `uv run fastapi dev fundamentos/api/main.py` → abrir `/docs`.
 
