@@ -35,9 +35,13 @@ uv run pre-commit install    # reativa os hooks de pré-commit
 | 2 | Controle de fluxo: for/while, enumerate, zip, match, ternário, continue/break | ✅ |
 | 3 | Erros: try/except/else/finally, raise, EAFP, `.get()` | ✅ |
 | 4 | Classes/POO: class, `__init__`, self, métodos, raise em método, `__repr__`, dunder | ✅ |
+| 5 | Herança: `class B(A)`, `super()`, override, `@property`, `@staticmethod`, design "é um(a)" | ✅ |
 
 Exercícios resolvidos em `fundamentos/` (cada um tem `.md` com o enunciado + `.py`
-com a solução): **exercicio01 a exercicio06**.
+com a solução): **exercicio01 a exercicio07**.
+
+Já praticado na prática: `import` entre arquivos (`from exercicio06 import ContaBancaria`)
+e o `if __name__ == "__main__":` para proteger o código de teste ao importar.
 
 ## Pontos-chave já dominados
 
@@ -51,11 +55,12 @@ com a solução): **exercicio01 a exercicio06**.
 
 ## Próximo passo
 
-➡️ **Aula 5 — Herança e o resto de POO** (subclasses, `super().__init__()`,
-sobrescrever métodos, talvez `@property` e métodos de classe/estáticos).
+➡️ **Aula 6 — Módulos e `import` a fundo** (módulo vs pacote, `__init__.py`,
+imports absolutos/relativos, organização de pastas). O aluno já usou import
+simples na prática; aprofundar para organizar um projeto de verdade.
 
-Depois, na ordem: **módulos (`import`)** → **decorators (`@`)** → 🎯 **primeira API
-com FastAPI** (`uv add fastapi`).
+Depois, na ordem: **decorators (`@`)** → 🎯 **primeira API com FastAPI**
+(`uv add fastapi`).
 
 ## Como retomar
 
