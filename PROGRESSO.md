@@ -40,10 +40,12 @@ uv run pre-commit install    # reativa os hooks de pré-commit
 | 7 | Decorators: função como objeto, `@` = açúcar p/ `f = deco(f)`, wrapper com `*args/**kwargs`, decorator COM argumento (3 camadas), `functools.wraps` | ✅ |
 | 8 | 🎯 Primeira API com FastAPI: `@app.get/post`, path param tipado, request body com Pydantic (`BaseModel`), `HTTPException(404)`, `status_code=201`, validação 422 automática, doc `/docs` | ✅ |
 | 9 | CRUD completo + organização: `PUT`/`DELETE`, `204 No Content`, `response_model` (DTO de saída, filtra campos), `APIRouter` + `include_router` (rotas em módulo próprio) | ✅ |
+| 10 | Banco de dados: SQLite + SQLModel, `table=True`, `engine`, `Session`, `Depends` para injeção, `session.add/commit/refresh/delete`, modelo base vs modelo de tabela (`CategoriaBase` + `Categoria`), `lifespan` para inicializar o banco | ✅ |
 
 Exercícios resolvidos em `fundamentos/` (cada um tem `.md` com o enunciado + `.py`
 com a solução): **exercicio01 a exercicio09**, + exercicio10/11 (`.md`) = a **API** em
 `fundamentos/api/` (CRUD completo de tarefas em memória, organizado com `APIRouter`).
+Exercício 12: CRUD de categorias com SQLModel (exercício de praticar o mesmo fluxo do zero).
 
 Já praticado na prática: `import` entre arquivos, organização em **pacote** (`banco/`
 com `conta.py` + `tipos.py` + `__init__.py` re-exportando), os dois estilos de import
@@ -62,14 +64,15 @@ para separar "código que roda" de "código importável".
 
 ## Próximo passo
 
-➡️ 🗄️ **Aula 10 — Banco de dados (persistência de verdade)**. Hoje as tarefas vivem
-numa lista em memória — somem quando o servidor reinicia. Próximos temas:
-1. **SQLite + SQLModel** (`uv add sqlmodel`) — SQLModel junta Pydantic + SQLAlchemy,
-   então o modelo de tabela é quase igual aos `BaseModel` que ele já conhece.
-2. Definir a tabela `Tarefa`, criar o engine e a sessão (`Session`).
-3. Trocar a lista em memória por queries reais: `session.add`, `session.get`,
-   `select(...)`, `session.delete`, `session.commit`.
-4. **Injeção de dependência** do FastAPI (`Depends`) para entregar a sessão às rotas.
+➡️ 🔗 **Aula 11 — Relacionamentos entre tabelas**. Tarefa e Categoria existem mas não
+se conectam. Próximos temas:
+1. **ForeignKey**: adicionar `categoria_id: int | None` em `Tarefa` apontando para
+   `Categoria.id`.
+2. **Relationship**: `categoria: Categoria | None = Relationship()` — acesso ao objeto
+   relacionado sem query extra.
+3. **Modelos de leitura aninhados**: retornar a tarefa já com a categoria embutida no
+   JSON (`response_model` com campo `categoria`).
+4. Entender quando usar `select()` com `join` vs quando o `Relationship` já resolve.
 
 > A API atual roda com: `uv run fastapi dev fundamentos/api/main.py` → abrir `/docs`.
 
