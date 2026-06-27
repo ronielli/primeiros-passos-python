@@ -10,7 +10,7 @@ description = "Projeto de estudos de Python (backend), vindo de JavaScript"
 readme = "README.md"
 requires-python = ">=3.13"
 # Dependências de produção entram aqui (ex: "fastapi>=0.110"). Vazio por enquanto.
-dependencies = []
+dependencies = ["fastapi[standard]>=0.138.1"]
 
 # --- Dependências de desenvolvimento (igual ao devDependencies) -------------
 # Ferramentas que só usamos para desenvolver, não para rodar em produção.

@@ -38,9 +38,11 @@ uv run pre-commit install    # reativa os hooks de pré-commit
 | 5 | Herança: `class B(A)`, `super()`, override, `@property`, `@staticmethod`, design "é um(a)" | ✅ |
 | 6 | Módulos e pacotes: módulo vs pacote, `__init__.py` (re-export/fachada), import absoluto vs relativo (`from .x import`), `if __name__` | ✅ |
 | 7 | Decorators: função como objeto, `@` = açúcar p/ `f = deco(f)`, wrapper com `*args/**kwargs`, decorator COM argumento (3 camadas), `functools.wraps` | ✅ |
+| 8 | 🎯 Primeira API com FastAPI: `@app.get/post`, path param tipado, request body com Pydantic (`BaseModel`), `HTTPException(404)`, `status_code=201`, validação 422 automática, doc `/docs` | ✅ |
 
 Exercícios resolvidos em `fundamentos/` (cada um tem `.md` com o enunciado + `.py`
-com a solução): **exercicio01 a exercicio09**.
+com a solução): **exercicio01 a exercicio09**, + exercicio10 (`.md`) = a **API** em
+`fundamentos/api/main.py` (CRUD de tarefas em memória).
 
 Já praticado na prática: `import` entre arquivos, organização em **pacote** (`banco/`
 com `conta.py` + `tipos.py` + `__init__.py` re-exportando), os dois estilos de import
@@ -59,13 +61,19 @@ para separar "código que roda" de "código importável".
 
 ## Próximo passo
 
-➡️ 🎯 **Aula 8 — Primeira API com FastAPI** (`uv add fastapi[standard]`). Onde tudo
-se junta: rotas como decorators (`@app.get(...)`), funções com type hints viram
-validação automática, dict/list viram JSON. Sair de `fundamentos/` e criar uma pasta
-`api/` com o primeiro `main.py`. Rodar com `uv run fastapi dev`.
+➡️ **Aula 9 — Completar o CRUD + organizar a API**. A API hoje só tem GET (lista/um)
+e POST. Próximos temas, na ordem:
+1. **`PUT /tarefas/{id}`** (atualizar) e **`DELETE /tarefas/{id}`** (remover) — fecha o
+   CRUD. Praticar `status_code=204` no delete e 404 quando não existe.
+2. **`response_model`** (modelo Pydantic de saída) — controlar/validar o que a API
+   devolve, não só o que recebe.
+3. **Organizar com `APIRouter`** — separar as rotas de tarefas num módulo próprio
+   (`api/routers/tarefas.py`), aplicando o que aprendeu de pacotes/módulos.
 
-O aluno já domina: tipos/coleções, fluxo, erros, POO+herança, módulos/pacotes e
-decorators — tem a base toda pra entender a API sem mágica.
+Depois disso: 🗄️ **persistência de verdade** (banco) — provavelmente SQLite +
+SQLModel/SQLAlchemy, saindo da lista "em memória".
+
+> A API atual roda com: `uv run fastapi dev fundamentos/api/main.py` → abrir `/docs`.
 
 ## Como retomar
 
