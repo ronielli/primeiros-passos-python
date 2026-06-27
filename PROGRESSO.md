@@ -36,12 +36,16 @@ uv run pre-commit install    # reativa os hooks de pré-commit
 | 3 | Erros: try/except/else/finally, raise, EAFP, `.get()` | ✅ |
 | 4 | Classes/POO: class, `__init__`, self, métodos, raise em método, `__repr__`, dunder | ✅ |
 | 5 | Herança: `class B(A)`, `super()`, override, `@property`, `@staticmethod`, design "é um(a)" | ✅ |
+| 6 | Módulos e pacotes: módulo vs pacote, `__init__.py` (re-export/fachada), import absoluto vs relativo (`from .x import`), `if __name__` | ✅ |
+| 7 | Decorators: função como objeto, `@` = açúcar p/ `f = deco(f)`, wrapper com `*args/**kwargs`, decorator COM argumento (3 camadas), `functools.wraps` | ✅ |
 
 Exercícios resolvidos em `fundamentos/` (cada um tem `.md` com o enunciado + `.py`
-com a solução): **exercicio01 a exercicio07**.
+com a solução): **exercicio01 a exercicio09**.
 
-Já praticado na prática: `import` entre arquivos (`from exercicio06 import ContaBancaria`)
-e o `if __name__ == "__main__":` para proteger o código de teste ao importar.
+Já praticado na prática: `import` entre arquivos, organização em **pacote** (`banco/`
+com `conta.py` + `tipos.py` + `__init__.py` re-exportando), os dois estilos de import
+(`import banco.conta` vs `from banco import ...`), e o `if __name__ == "__main__":`
+para separar "código que roda" de "código importável".
 
 ## Pontos-chave já dominados
 
@@ -55,12 +59,13 @@ e o `if __name__ == "__main__":` para proteger o código de teste ao importar.
 
 ## Próximo passo
 
-➡️ **Aula 6 — Módulos e `import` a fundo** (módulo vs pacote, `__init__.py`,
-imports absolutos/relativos, organização de pastas). O aluno já usou import
-simples na prática; aprofundar para organizar um projeto de verdade.
+➡️ 🎯 **Aula 8 — Primeira API com FastAPI** (`uv add fastapi[standard]`). Onde tudo
+se junta: rotas como decorators (`@app.get(...)`), funções com type hints viram
+validação automática, dict/list viram JSON. Sair de `fundamentos/` e criar uma pasta
+`api/` com o primeiro `main.py`. Rodar com `uv run fastapi dev`.
 
-Depois, na ordem: **decorators (`@`)** → 🎯 **primeira API com FastAPI**
-(`uv add fastapi`).
+O aluno já domina: tipos/coleções, fluxo, erros, POO+herança, módulos/pacotes e
+decorators — tem a base toda pra entender a API sem mágica.
 
 ## Como retomar
 

@@ -46,7 +46,7 @@ ignore = []
 
 [tool.ruff.lint.per-file-ignores]
 # Nos materiais de estudo, liberamos coisas didáticas que num projeto real seriam avisos:
-"fundamentos/*" = ["B018"]  # permite "expressões soltas" para testar no REPL
+"fundamentos/*" = ["B018"] # permite "expressões soltas" para testar no REPL
 
 [tool.ruff.format]
 quote-style = "double"
@@ -55,8 +55,8 @@ quote-style = "double"
 [tool.mypy]
 python_version = "3.13"
 # Modo gradual e amigável para quem está começando:
-warn_return_any = true       # avisa se uma função retorna "Any" sem querer
-warn_unused_ignores = true   # avisa se você tem um "# type: ignore" desnecessário
+warn_return_any = true        # avisa se uma função retorna "Any" sem querer
+warn_unused_ignores = true    # avisa se você tem um "# type: ignore" desnecessário
 ignore_missing_imports = true # não reclama de libs sem type hints
 
 # --- pytest: framework de testes --------------------------------------------

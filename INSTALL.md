@@ -42,3 +42,24 @@ Instale a extensão **Ruff** (`charliermarsh.ruff`) pelo painel de extensões do
 ---
 
 Após esses passos o projeto está pronto: autocomplete, formatação ao salvar e checagem de tipos funcionando.
+
+## 7. (Opcional) Centralizar o cache de bytecode
+
+> Recomendação pessoal — **não é obrigatório** para o projeto funcionar.
+
+Por padrão, o Python espalha pastas `__pycache__/` ao lado de cada arquivo. Para
+juntar tudo numa pasta única do sistema (mantendo o projeto limpo), adicione esta
+linha ao seu `~/.zshrc` (ou `~/.bashrc`):
+
+```bash
+export PYTHONPYCACHEPREFIX="$HOME/.cache/pycache"
+```
+
+Depois recarregue o shell:
+
+```bash
+source ~/.zshrc
+```
+
+Isso é uma configuração da **sua máquina** (não do repositório), então cada pessoa
+decide se quer ativar.
