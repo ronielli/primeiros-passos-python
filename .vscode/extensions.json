@@ -1,0 +1,26 @@
+{
+  // Extensões recomendadas para este projeto.
+  // Ao abrir a pasta, o VS Code sugere instalar as que faltam
+  // (notificação no canto, ou em: Extensions > "Recommended").
+  "recommendations": [
+    // --- Essenciais para Python ---
+    "ms-python.python", // suporte a Python (rodar, debugar, selecionar interpretador)
+    "ms-python.vscode-pylance", // IntelliSense / autocomplete (o que você queria!)
+    "ms-python.debugpy", // debugger
+
+    // --- Qualidade de código ---
+    "charliermarsh.ruff", // linter + formatter (ESLint + Prettier do Python)
+
+    // --- Conforto ---
+    "kevinrose.vsc-python-indent", // indentação inteligente
+    "tamasfe.even-better-toml", // edição do pyproject.toml com destaque/validação
+
+    // --- Ortografia (comentários em pt-BR) ---
+    "streetsidesoftware.code-spell-checker", // corretor ortográfico
+    "streetsidesoftware.code-spell-checker-portuguese-brazilian" // dicionário pt-BR
+  ],
+
+  // Extensões que NÃO recomendamos (evita conflito):
+  // o Ruff já ordena imports, então o isort separado é redundante.
+  "unwantedRecommendations": ["ms-python.isort"]
+}

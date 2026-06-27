@@ -17,5 +17,14 @@
 
   // Corretor ortográfico (cSpell): reconhece inglês E português do Brasil,
   // assim os comentários em pt-BR param de aparecer como "Unknown word".
-  "cSpell.language": "en,pt,pt_BR"
+  "cSpell.language": "en,pt,pt_BR",
+
+  // --- Autocomplete / IntelliSense (Pylance) ---
+  // Garante que o Pylance é o "language server" (quem dá o autocomplete).
+  "python.languageServer": "Pylance",
+  // Análise mais completa: sugere imports automáticos e checagem básica de tipos.
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.typeCheckingMode": "basic",
+  // Completa parênteses de função automaticamente ao aceitar uma sugestão.
+  "python.analysis.completeFunctionParens": true
 }
