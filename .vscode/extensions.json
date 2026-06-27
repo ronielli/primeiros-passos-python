@@ -5,7 +5,6 @@
   "recommendations": [
     // --- Essenciais para Python ---
     "ms-python.python", // suporte a Python (rodar, debugar, selecionar interpretador)
-    "ms-python.vscode-pylance", // IntelliSense / autocomplete (o que você queria!)
     "ms-python.debugpy", // debugger
 
     // --- Qualidade de código ---
