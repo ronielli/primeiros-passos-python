@@ -24,28 +24,34 @@ class ContaBancaria:
         op = "\n".join(item for item in self.operacoes)
         return f"ContaBancaria(dono={self.dono!r}, saldo:{self.saldo:.2f})\n{op}"
 
-
-conta = ContaBancaria("Ana", 100)
-print(conta)
-
-try:
-    conta.depositar(-10)
-except ValueError as e:
-    print(f"Erro depositar: {e}")
-
-try:
-    conta.sacar(-10)
-except ValueError as e:
-    print(f"Erro sacar: {e}")
-
-try:
-    conta.sacar(150)
-except ValueError as e:
-    print(f"Erro sacar: {e}")
+    @property
+    def saldo_formatado(self):
+        return f"R$ {self.saldo:.2f}"
 
 
-conta.depositar(50)
-print(conta)
+# Este bloco só roda quando você executa "python exercicio06.py" diretamente.
+# Quando outro arquivo faz "from exercicio06 import ContaBancaria", ele NÃO roda.
+if __name__ == "__main__":
+    conta = ContaBancaria("Ana", 100)
+    print(conta)
 
-conta.sacar(30)
-print(conta)
+    try:
+        conta.depositar(-10)
+    except ValueError as e:
+        print(f"Erro depositar: {e}")
+
+    try:
+        conta.sacar(-10)
+    except ValueError as e:
+        print(f"Erro sacar: {e}")
+
+    try:
+        conta.sacar(150)
+    except ValueError as e:
+        print(f"Erro sacar: {e}")
+
+    conta.depositar(50)
+    print(conta)
+
+    conta.sacar(30)
+    print(conta)
