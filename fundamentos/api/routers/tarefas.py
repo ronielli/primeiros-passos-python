@@ -25,7 +25,7 @@ def busca(tarefa_id: int, session: SessionDep):
     tarefa = session.exec(
         select(Tarefa)
         .where(Tarefa.id == tarefa_id)
-        .options(selectinload(Tarefa.categoria))  # pyright: ignore[reportArgumentType]
+        .options(selectinload(Tarefa.categoria))  # type: ignore[arg-type]
     ).first()
     if not tarefa:
         raise HTTPException(status_code=404, detail="Tarefa não encontrada")

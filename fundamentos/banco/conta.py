@@ -2,7 +2,7 @@ class ContaBancaria:
     def __init__(self, dono: str, saldo: float = 0.0):
         self.dono = dono
         self.saldo = saldo
-        self.operacoes = []
+        self.operacoes: list[str] = []
 
     def depositar(self, valor: float):
         if valor <= 0:

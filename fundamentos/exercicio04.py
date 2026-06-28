@@ -1,4 +1,13 @@
-pedidos = [
+from typing import TypedDict
+
+
+class Pedido(TypedDict):
+    cliente: str
+    valor: float
+    pago: bool
+
+
+pedidos: list[Pedido] = [
     {"cliente": "ana", "valor": 150.0, "pago": True},
     {"cliente": "bruno", "valor": 80.0, "pago": False},
     {"cliente": "carla", "valor": 200.0, "pago": True},
@@ -9,7 +18,7 @@ for i, pedido in enumerate(pedidos):
     status = "pago" if pedido["pago"] else "pendente"
     print(f"{i + 1}.", f"{pedido['cliente']} - R$ {pedido['valor']:.2f} ({status})")
 
-recebido = 0
+recebido: float = 0
 for pedido in pedidos:
     if not pedido["pago"]:
         continue
