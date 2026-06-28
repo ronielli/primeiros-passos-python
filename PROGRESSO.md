@@ -41,11 +41,12 @@ uv run pre-commit install    # reativa os hooks de pré-commit
 | 8 | 🎯 Primeira API com FastAPI: `@app.get/post`, path param tipado, request body com Pydantic (`BaseModel`), `HTTPException(404)`, `status_code=201`, validação 422 automática, doc `/docs` | ✅ |
 | 9 | CRUD completo + organização: `PUT`/`DELETE`, `204 No Content`, `response_model` (DTO de saída, filtra campos), `APIRouter` + `include_router` (rotas em módulo próprio) | ✅ |
 | 10 | Banco de dados: SQLite + SQLModel, `table=True`, `engine`, `Session`, `Depends` para injeção, `session.add/commit/refresh/delete`, modelo base vs modelo de tabela (`CategoriaBase` + `Categoria`), `lifespan` para inicializar o banco | ✅ |
+| 11 | Relacionamentos: `foreign_key`, `Relationship(back_populates=)`, ordem das classes importa (sem forward ref), `selectinload` para eager loading, `TarefaComCategoria` como DTO de leitura aninhado, `IntegrityError` para FK violada | ✅ |
 
 Exercícios resolvidos em `fundamentos/` (cada um tem `.md` com o enunciado + `.py`
 com a solução): **exercicio01 a exercicio09**, + exercicio10/11 (`.md`) = a **API** em
 `fundamentos/api/` (CRUD completo de tarefas em memória, organizado com `APIRouter`).
-Exercício 12: CRUD de categorias com SQLModel (exercício de praticar o mesmo fluxo do zero).
+Exercício 12: CRUD de categorias com SQLModel. Exercício 13: relacionamentos FK + Relationship, DTO aninhado, eager loading.
 
 Já praticado na prática: `import` entre arquivos, organização em **pacote** (`banco/`
 com `conta.py` + `tipos.py` + `__init__.py` re-exportando), os dois estilos de import
@@ -64,15 +65,13 @@ para separar "código que roda" de "código importável".
 
 ## Próximo passo
 
-➡️ 🔗 **Aula 11 — Relacionamentos entre tabelas**. Tarefa e Categoria existem mas não
-se conectam. Próximos temas:
-1. **ForeignKey**: adicionar `categoria_id: int | None` em `Tarefa` apontando para
-   `Categoria.id`.
-2. **Relationship**: `categoria: Categoria | None = Relationship()` — acesso ao objeto
-   relacionado sem query extra.
-3. **Modelos de leitura aninhados**: retornar a tarefa já com a categoria embutida no
-   JSON (`response_model` com campo `categoria`).
-4. Entender quando usar `select()` com `join` vs quando o `Relationship` já resolve.
+➡️ 🔐 **Aula 12 — Autenticação com JWT**. A API está aberta — qualquer um pode criar,
+editar e deletar. Próximos temas:
+1. **Hashing de senha** com `passlib` (`bcrypt`) — nunca guardar senha em texto puro.
+2. **JWT** (`python-jose`) — gerar token no login, assinar com secret key.
+3. **Rota de login** (`POST /auth/login`) que valida usuário e devolve o token.
+4. **Depends de autenticação** — proteger rotas com `Depends(get_current_user)`.
+5. Modelo `Usuario` no banco (email + senha hasheada).
 
 > A API atual roda com: `uv run fastapi dev fundamentos/api/main.py` → abrir `/docs`.
 
