@@ -1,7 +1,9 @@
 from typing import Annotated
 
-from database import Tarefa, get_session
+from database import Tarefa, TarefaBase, TarefaComCategoria, get_session
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
 
 SessionDep = Annotated[Session, Depends(get_session)]
@@ -14,20 +16,29 @@ def get_tarefas(session: SessionDep):
     return session.exec(select(Tarefa)).all()
 
 
-@router.get("/{tarefa_id}", response_model=Tarefa)
+@router.get("/{tarefa_id}", response_model=TarefaComCategoria)
 def busca(tarefa_id: int, session: SessionDep):
-    tarefa = session.get(Tarefa, tarefa_id)
+    tarefa = session.exec(
+        select(Tarefa)
+        .where(Tarefa.id == tarefa_id)
+        .options(selectinload(Tarefa.categoria))
+    ).first()
     if not tarefa:
         raise HTTPException(status_code=404, detail="Tarefa não encontrada")
     return tarefa
 
 
 @router.post("", status_code=201, response_model=Tarefa)
-def criar(tarefa: Tarefa, session: SessionDep):
-    session.add(tarefa)
-    session.commit()
-    session.refresh(tarefa)
-    return tarefa
+def criar(tarefa: TarefaBase, session: SessionDep):
+    db_tarefa = Tarefa.model_validate(tarefa)
+    session.add(db_tarefa)
+    try:
+        session.commit()
+    except IntegrityError:
+        session.rollback()
+        raise HTTPException(status_code=422, detail="Categoria não existe") from None
+    session.refresh(db_tarefa)
+    return db_tarefa
 
 
 @router.put("/{tarefa_id}", response_model=Tarefa)

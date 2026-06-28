@@ -1,10 +1,5 @@
-from sqlmodel import Field, Session, SQLModel, create_engine
-
-
-class Tarefa(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    titulo: str
-    feita: bool = False
+from sqlalchemy import event
+from sqlmodel import Field, Relationship, Session, SQLModel, create_engine
 
 
 class CategoriaBase(SQLModel):
@@ -13,9 +8,35 @@ class CategoriaBase(SQLModel):
 
 class Categoria(CategoriaBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
+    tarefas: list["Tarefa"] = Relationship(back_populates="categoria")
+
+
+class TarefaBase(SQLModel):
+    titulo: str
+    feita: bool = False
+    categoria_id: int | None = Field(default=None, foreign_key="categoria.id")
+
+
+class Tarefa(TarefaBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    categoria: Categoria | None = Relationship(back_populates="tarefas")
+
+
+class TarefaComCategoria(SQLModel):
+    id: int | None
+    titulo: str
+    feita: bool
+    categoria: Categoria | None = None
 
 
 engine = create_engine("sqlite:///tarefas.db")
+
+
+@event.listens_for(engine, "connect")
+def enforce_foreign_keys(dbapi_connection, _):
+    cursor = dbapi_connection.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
 
 
 def create_db_and_tables():
