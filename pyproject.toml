@@ -25,6 +25,8 @@ dev = [
     "mypy>=1.13",      # type checker (nosso "tsc")
     "pytest>=8.0",     # framework de testes (nosso "jest")
     "pre-commit>=4.0", # roda checagens antes de cada commit (nosso "husky")
+    "pytest-watcher>=0.6.3", # re-roda os testes ao salvar (nosso "jest --watch")
+    "poethepoet>=0.47.0", # task runner: tasks em [tool.poe.tasks] (nosso "scripts")
 ]
 
 # ============================================================================
@@ -64,7 +66,33 @@ warn_return_any = true        # avisa se uma função retorna "Any" sem querer
 warn_unused_ignores = true    # avisa se você tem um "# type: ignore" desnecessário
 ignore_missing_imports = true # não reclama de libs sem type hints
 
+# --- basedpyright: type checker do editor -----------------------------------
+# O editor não lê o `pythonpath` do pytest, então repetimos a pasta da API aqui
+# para ele resolver `from database import ...` e `from main import app`.
+[tool.pyright]
+extraPaths = ["fundamentos/api"]
+
 # --- pytest: framework de testes --------------------------------------------
 [tool.pytest.ini_options]
 testpaths = ["tests"]        # onde procurar testes
 python_files = ["test_*.py"] # nomes de arquivo que contam como teste
+# A API usa imports "crus" (from database import ...), então adicionamos a pasta
+# dela ao path para os testes conseguirem importar `main`, `database`, `routers`.
+pythonpath = ["fundamentos/api"]
+# Silencia 1 aviso de depreciação que vem de DENTRO do FastAPI/Starlette
+# (não é do nosso código): o TestClient ainda usa o httpx atual.
+filterwarnings = [
+    "ignore:Using `httpx` with `starlette.testclient` is deprecated:Warning",
+]
+
+# --- poe: task runner (o "scripts" do package.json) -------------------------
+# Rode com:  uv run poe <nome>   (ex.: uv run poe test)
+[tool.poe.tasks]
+dev     = "fastapi dev fundamentos/api/main.py"  # sobe a API em modo dev (reload)
+test    = "pytest"                               # roda todos os testes
+"test:v" = "pytest -v"                           # testes com nome de cada um
+watch   = "ptw . -- -v"                          # re-roda os testes ao salvar
+lint    = "ruff check ."                         # aponta problemas de lint
+fix     = "ruff check . --fix"                   # corrige lint automático
+fmt     = "ruff format ."                        # formata o código (≈ prettier)
+types   = "mypy fundamentos"                     # checa os type hints (≈ tsc)

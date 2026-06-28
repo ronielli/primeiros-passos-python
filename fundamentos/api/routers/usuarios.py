@@ -1,5 +1,6 @@
 from datetime import UTC, datetime, timedelta
 from typing import Annotated
+from unittest.mock import Mock
 
 import bcrypt
 from database import Usuario, UsuarioBase, UsuarioCriar, get_session
@@ -8,6 +9,8 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import jwt
 from pydantic import BaseModel
 from sqlmodel import Session, select
+
+enviar_email = Mock()
 
 SECRET_KEY = "ESTUDOS_RONIELLI"
 ALGORITHM = "HS256"
@@ -80,6 +83,7 @@ def criar(usuario: UsuarioCriar, session: SessionDep):
     session.add(db_usuario)
     session.commit()
     session.refresh(db_usuario)
+    enviar_email(db_usuario.email)
     return db_usuario
 
 
