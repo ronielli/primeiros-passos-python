@@ -23,6 +23,7 @@ def test_registro(client):
     r = client.post("/usuarios", json={"email": "r@g.com", "senha": "1234"})
     assert r.status_code == 201
     assert r.json()["id"] == 1
+    assert "senha_hash" not in r.json()
 
 
 def test_login_sucesso(client):
@@ -47,6 +48,7 @@ def test_me_com_token(client, token):
     r = client.get("/usuarios/me", headers={"Authorization": f"Bearer {token}"})
     assert r.status_code == 200
     assert r.json()["email"] == "r@g.com"
+    assert "senha_hash" not in r.json()
 
 
 def test_listar_tarefas_protegida(client):

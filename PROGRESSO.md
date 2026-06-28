@@ -45,11 +45,12 @@ uv run pre-commit install    # reativa os hooks de pré-commit
 | 12 | Autenticação JWT: `bcrypt` para hash de senha, `jose` para gerar/verificar token, `HTTPBearer` + `Depends` para proteger rotas, cookie `httponly` + header Bearer (suporte mobile e web), `OAuth2PasswordRequestForm` | ✅ |
 | 13 | 🧪 Testes com pytest: `TestClient` (≈ supertest), `fixture` com `yield` (setup/teardown), fixture que depende de fixture, `app.dependency_overrides` (≈ jest.mock) p/ injetar banco de teste, banco em RAM (`sqlite://` + `StaticPool`), `conftest.py` (setup global) vs fixture local, testar erros (401/404/422), asserts no conteúdo (não só status), **mock** com `patch` ("patch where it's used") | ✅ |
 | 14 | ⚙️ Configuração com `pydantic-settings`: 12-factor config (config vem do ambiente), `BaseSettings` lê env vars + `.env` e **valida/converte tipos**, campo sem default = obrigatório (falha cedo com `ValidationError`), `.env` (segredo, fora do git) vs `.env.example` (modelo, no git), env var MAIÚSCULA ↔ atributo `snake_case` (case-insensitive no nome), plugin `pydantic.mypy` p/ o checker entender (ensinar > ignorar) | ✅ |
+| 15 | 🔒 DTO de saída: modelo de tabela ≠ modelo de resposta, `response_model` **filtra** a saída (corta campos fora do DTO), `UsuarioPublico` p/ não vazar `senha_hash`, testar a **ausência** de campos (teste de segurança), bug achado **rodando o app** (`/run`) que os testes não pegavam | ✅ |
 
 Exercícios resolvidos em `fundamentos/` (cada um tem `.md` com o enunciado + `.py`
 com a solução): **exercicio01 a exercicio09**, + exercicio10/11 (`.md`) = a **API** em
 `fundamentos/api/` (CRUD completo de tarefas em memória, organizado com `APIRouter`).
-Exercício 12: CRUD de categorias com SQLModel. Exercício 13: relacionamentos FK + Relationship, DTO aninhado, eager loading. Exercício 14: autenticação JWT. Exercício 15: testes com pytest (`tests/conftest.py` com fixtures `session`/`client` + `dependency_overrides`, `tests/test_tarefas.py` e `tests/test_auth.py` cobrindo CRUD, auth e casos de erro — 12 testes passando). Exercício 16: configuração com `pydantic-settings` (`api/config.py` com `Settings(BaseSettings)`, `.env` + `.env.example`, `SECRET_KEY`/`DATABASE_URL`/expiração saíram do código).
+Exercício 12: CRUD de categorias com SQLModel. Exercício 13: relacionamentos FK + Relationship, DTO aninhado, eager loading. Exercício 14: autenticação JWT. Exercício 15: testes com pytest (`tests/conftest.py` com fixtures `session`/`client` + `dependency_overrides`, `tests/test_tarefas.py` e `tests/test_auth.py` cobrindo CRUD, auth e casos de erro — 12 testes passando). Exercício 16: configuração com `pydantic-settings` (`api/config.py` com `Settings(BaseSettings)`, `.env` + `.env.example`, `SECRET_KEY`/`DATABASE_URL`/expiração saíram do código). Exercício 17: DTO de saída `UsuarioPublico` (para de vazar `senha_hash` nas respostas) + testes de não-vazamento.
 
 Já praticado na prática: `import` entre arquivos, organização em **pacote** (`banco/`
 com `conta.py` + `tipos.py` + `__init__.py` re-exportando), os dois estilos de import
@@ -68,8 +69,8 @@ para separar "código que roda" de "código importável".
 
 ## Próximo passo
 
-➡️ **Aula 15 — a definir.** A API está funcional, **com testes** (18 testes) e
-**com config externalizada** (`.env`). Candidatos a próximo tema:
+➡️ **Aula 16 — a definir.** A API está funcional, **com testes** (18 testes), com
+config externalizada (`.env`) e **sem vazar senha_hash**. Candidatos a próximo tema:
 1. **Alembic** — migrations de banco (versionar mudanças de schema, em vez de
    `create_all`). É o próximo passo natural agora que a config saiu do código.
 2. Testes avançados: cobertura com `pytest-cov`, `parametrize` nos testes da API,

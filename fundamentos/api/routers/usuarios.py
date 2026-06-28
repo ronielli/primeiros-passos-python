@@ -4,7 +4,7 @@ from unittest.mock import Mock
 
 import bcrypt
 from config import settings
-from database import Usuario, UsuarioBase, UsuarioCriar, get_session
+from database import Usuario, UsuarioBase, UsuarioCriar, UsuarioPublico, get_session
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import jwt
@@ -56,17 +56,17 @@ class Token(BaseModel):
     token_type: str
 
 
-@router.get("", response_model=list[Usuario])
+@router.get("", response_model=list[UsuarioPublico])
 def get(session: SessionDep):
     return session.exec(select(Usuario)).all()
 
 
-@router.get("/me", response_model=Usuario)
+@router.get("/me", response_model=UsuarioPublico)
 def me(usuario: Annotated[Usuario, Depends(get_current_user)]):
     return usuario
 
 
-@router.get("/{usuario_id}", response_model=Usuario)
+@router.get("/{usuario_id}", response_model=UsuarioPublico)
 def busca(usuario_id: int, session: SessionDep):
     usuario = session.get(Usuario, usuario_id)
     if not usuario:
@@ -74,7 +74,7 @@ def busca(usuario_id: int, session: SessionDep):
     return usuario
 
 
-@router.post("", status_code=201, response_model=Usuario)
+@router.post("", status_code=201, response_model=UsuarioPublico)
 def criar(usuario: UsuarioCriar, session: SessionDep):
     dados = usuario.model_dump()
     dados["senha_hash"] = hash_senha(dados.pop("senha"))
@@ -115,7 +115,7 @@ def delete(usuario_id: int, session: SessionDep):
     session.commit()
 
 
-@router.put("/{usuario_id}", response_model=Usuario)
+@router.put("/{usuario_id}", response_model=UsuarioPublico)
 def substituir(usuario_id: int, usuario: UsuarioBase, session: SessionDep):
     db_usuario = session.get(Usuario, usuario_id)
     if not db_usuario:

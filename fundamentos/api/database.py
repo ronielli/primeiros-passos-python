@@ -32,6 +32,11 @@ class TarefaBase(SQLModel):
     categoria_id: int | None = Field(default=None, foreign_key="categoria.id")
 
 
+class UsuarioPublico(SQLModel):
+    id: int
+    email: str
+
+
 class Tarefa(TarefaBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     categoria: Categoria | None = Relationship(back_populates="tarefas")
