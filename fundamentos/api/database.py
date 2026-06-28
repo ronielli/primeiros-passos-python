@@ -5,6 +5,7 @@ from sqlmodel import Field, Relationship, Session, SQLModel, create_engine
 
 class CategoriaBase(SQLModel):
     nome: str
+    descricao: str | None = None
 
 
 class Categoria(CategoriaBase, table=True):
@@ -29,6 +30,7 @@ class Usuario(UsuarioBase, table=True):
 class TarefaBase(SQLModel):
     titulo: str
     feita: bool = False
+    prioridade: int = 0
     categoria_id: int | None = Field(default=None, foreign_key="categoria.id")
 
 
@@ -59,8 +61,8 @@ def enforce_foreign_keys(dbapi_connection, _):
     cursor.close()
 
 
-def create_db_and_tables():
-    SQLModel.metadata.create_all(engine)
+# def create_db_and_tables():
+#     SQLModel.metadata.create_all(engine)
 
 
 def get_session():

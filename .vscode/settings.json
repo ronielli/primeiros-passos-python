@@ -18,5 +18,5 @@
   // Corretor ortográfico (cSpell): reconhece inglês E português do Brasil,
   // assim os comentários em pt-BR param de aparecer como "Unknown word".
   "cSpell.language": "en,pt,pt_BR",
-  "cSpell.words": ["selectinload", "usuario", "Usuario", "usuarios"]
+  "cSpell.words": ["descricao", "selectinload", "usuario", "Usuario", "usuarios"]
 }

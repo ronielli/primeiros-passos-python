@@ -11,6 +11,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 # Dependências de produção entram aqui (ex: "fastapi>=0.110"). Vazio por enquanto.
 dependencies = [
+    "alembic>=1.18.5",
     "fastapi[standard]>=0.138.1",
     "passlib[bcrypt]>=1.7.4",
     "python-jose[cryptography]>=3.5.0",
@@ -37,6 +38,8 @@ dev = [
 [tool.ruff]
 line-length = 88
 target-version = "py313"
+# Migrations sao geradas pelo Alembic (codigo de maquina) — nao linthamos elas.
+extend-exclude = ["alembic/versions"]
 
 [tool.ruff.lint]
 select = [
@@ -74,6 +77,8 @@ ignore_missing_imports = true # não reclama de libs sem type hints
 # para ele resolver `from database import ...` e `from main import app`.
 [tool.pyright]
 extraPaths = ["fundamentos/api"]
+# Migrations sao geradas pelo Alembic — suprime os avisos do checker nelas.
+ignore = ["alembic/versions"]
 
 # --- pytest: framework de testes --------------------------------------------
 [tool.pytest.ini_options]
