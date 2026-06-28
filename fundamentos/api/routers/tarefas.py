@@ -1,10 +1,12 @@
 from typing import Annotated
 
-from database import Tarefa, TarefaBase, TarefaComCategoria, get_session
+from database import Tarefa, TarefaBase, TarefaComCategoria, Usuario, get_session
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
+
+from routers.usuarios import get_current_user
 
 SessionDep = Annotated[Session, Depends(get_session)]
 
@@ -12,7 +14,9 @@ router = APIRouter(prefix="/tarefas", tags=["tarefas"])
 
 
 @router.get("", response_model=list[Tarefa])
-def get_tarefas(session: SessionDep):
+def get_tarefas(
+    session: SessionDep, usuario: Annotated[Usuario, Depends(get_current_user)]
+):
     return session.exec(select(Tarefa)).all()
 
 

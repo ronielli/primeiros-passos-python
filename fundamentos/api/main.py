@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 
 from database import create_db_and_tables
 from fastapi import FastAPI
-from routers import categorias, tarefas
+from routers import categorias, tarefas, usuarios
 
 
 @asynccontextmanager
@@ -22,3 +22,4 @@ def raiz():
 app.include_router(tarefas.router)
 
 app.include_router(categorias.router)
+app.include_router(usuarios.router)

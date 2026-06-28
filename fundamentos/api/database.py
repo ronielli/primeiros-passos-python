@@ -11,6 +11,20 @@ class Categoria(CategoriaBase, table=True):
     tarefas: list["Tarefa"] = Relationship(back_populates="categoria")
 
 
+class UsuarioCriar(SQLModel):
+    email: str
+    senha: str
+
+
+class UsuarioBase(SQLModel):
+    email: str
+    senha_hash: str
+
+
+class Usuario(UsuarioBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+
+
 class TarefaBase(SQLModel):
     titulo: str
     feita: bool = False
