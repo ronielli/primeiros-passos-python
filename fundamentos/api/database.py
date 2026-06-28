@@ -1,3 +1,4 @@
+from config import settings
 from sqlalchemy import event
 from sqlmodel import Field, Relationship, Session, SQLModel, create_engine
 
@@ -43,7 +44,7 @@ class TarefaComCategoria(SQLModel):
     categoria: Categoria | None = None
 
 
-engine = create_engine("sqlite:///tarefas.db")
+engine = create_engine(settings.database_url)
 
 
 @event.listens_for(engine, "connect")

@@ -16,3 +16,4 @@ __pycache__/
 # Arquivos do sistema operacional / editor
 .DS_Store
 tarefas.db
+*.db

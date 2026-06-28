@@ -43,12 +43,13 @@ uv run pre-commit install    # reativa os hooks de pré-commit
 | 10 | Banco de dados: SQLite + SQLModel, `table=True`, `engine`, `Session`, `Depends` para injeção, `session.add/commit/refresh/delete`, modelo base vs modelo de tabela (`CategoriaBase` + `Categoria`), `lifespan` para inicializar o banco | ✅ |
 | 11 | Relacionamentos: `foreign_key`, `Relationship(back_populates=)`, ordem das classes importa (sem forward ref), `selectinload` para eager loading, `TarefaComCategoria` como DTO de leitura aninhado, `IntegrityError` para FK violada | ✅ |
 | 12 | Autenticação JWT: `bcrypt` para hash de senha, `jose` para gerar/verificar token, `HTTPBearer` + `Depends` para proteger rotas, cookie `httponly` + header Bearer (suporte mobile e web), `OAuth2PasswordRequestForm` | ✅ |
-| 13 | 🧪 Testes com pytest: `TestClient` (≈ supertest), `fixture` com `yield` (setup/teardown), fixture que depende de fixture, `app.dependency_overrides` (≈ jest.mock) p/ injetar banco de teste, banco em RAM (`sqlite://` + `StaticPool`), `conftest.py` (setup global) vs fixture local, testar erros (401/404/422), asserts no conteúdo (não só status) | ✅ |
+| 13 | 🧪 Testes com pytest: `TestClient` (≈ supertest), `fixture` com `yield` (setup/teardown), fixture que depende de fixture, `app.dependency_overrides` (≈ jest.mock) p/ injetar banco de teste, banco em RAM (`sqlite://` + `StaticPool`), `conftest.py` (setup global) vs fixture local, testar erros (401/404/422), asserts no conteúdo (não só status), **mock** com `patch` ("patch where it's used") | ✅ |
+| 14 | ⚙️ Configuração com `pydantic-settings`: 12-factor config (config vem do ambiente), `BaseSettings` lê env vars + `.env` e **valida/converte tipos**, campo sem default = obrigatório (falha cedo com `ValidationError`), `.env` (segredo, fora do git) vs `.env.example` (modelo, no git), env var MAIÚSCULA ↔ atributo `snake_case` (case-insensitive no nome), plugin `pydantic.mypy` p/ o checker entender (ensinar > ignorar) | ✅ |
 
 Exercícios resolvidos em `fundamentos/` (cada um tem `.md` com o enunciado + `.py`
 com a solução): **exercicio01 a exercicio09**, + exercicio10/11 (`.md`) = a **API** em
 `fundamentos/api/` (CRUD completo de tarefas em memória, organizado com `APIRouter`).
-Exercício 12: CRUD de categorias com SQLModel. Exercício 13: relacionamentos FK + Relationship, DTO aninhado, eager loading. Exercício 14: autenticação JWT. Exercício 15: testes com pytest (`tests/conftest.py` com fixtures `session`/`client` + `dependency_overrides`, `tests/test_tarefas.py` e `tests/test_auth.py` cobrindo CRUD, auth e casos de erro — 12 testes passando).
+Exercício 12: CRUD de categorias com SQLModel. Exercício 13: relacionamentos FK + Relationship, DTO aninhado, eager loading. Exercício 14: autenticação JWT. Exercício 15: testes com pytest (`tests/conftest.py` com fixtures `session`/`client` + `dependency_overrides`, `tests/test_tarefas.py` e `tests/test_auth.py` cobrindo CRUD, auth e casos de erro — 12 testes passando). Exercício 16: configuração com `pydantic-settings` (`api/config.py` com `Settings(BaseSettings)`, `.env` + `.env.example`, `SECRET_KEY`/`DATABASE_URL`/expiração saíram do código).
 
 Já praticado na prática: `import` entre arquivos, organização em **pacote** (`banco/`
 com `conta.py` + `tipos.py` + `__init__.py` re-exportando), os dois estilos de import
@@ -67,12 +68,14 @@ para separar "código que roda" de "código importável".
 
 ## Próximo passo
 
-➡️ **Aula 14 — a definir.** A API está funcional e **com testes** (12 testes
-passando). Candidatos a próximo tema (ver memória `project-api-next-steps`):
-1. **pydantic-settings** — tirar `SECRET_KEY` e URL do banco do código (env vars).
-2. **Alembic** — migrations de banco (versionar mudanças de schema).
-3. Testes avançados: `mock`/`monkeypatch` (isolar dependências externas, ex.: relógio,
-   e-mail), cobertura com `pytest-cov`, `parametrize` nos testes da API.
+➡️ **Aula 15 — a definir.** A API está funcional, **com testes** (18 testes) e
+**com config externalizada** (`.env`). Candidatos a próximo tema:
+1. **Alembic** — migrations de banco (versionar mudanças de schema, em vez de
+   `create_all`). É o próximo passo natural agora que a config saiu do código.
+2. Testes avançados: cobertura com `pytest-cov`, `parametrize` nos testes da API,
+   `monkeypatch` (relógio/data).
+3. Limpeza de tipos: os exercícios antigos (`exercicio03/04`, `banco/conta.py`) e o
+   `selectinload` ainda acusam no `uv run poe types` (mypy) — dá pra zerar.
 
 ### Ferramentas de produtividade já instaladas (Aula 13)
 

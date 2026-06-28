@@ -3,6 +3,7 @@ from typing import Annotated
 from unittest.mock import Mock
 
 import bcrypt
+from config import settings
 from database import Usuario, UsuarioBase, UsuarioCriar, get_session
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -12,8 +13,6 @@ from sqlmodel import Session, select
 
 enviar_email = Mock()
 
-SECRET_KEY = "ESTUDOS_RONIELLI"
-ALGORITHM = "HS256"
 
 SessionDep = Annotated[Session, Depends(get_session)]
 
@@ -42,7 +41,7 @@ def get_current_user(
     if not token:
         raise HTTPException(status_code=401, detail="não autenticado")
     try:
-        dados = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        dados = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
         email = dados["sub"]
     except Exception:
         raise HTTPException(status_code=401, detail="token invalido") from None
@@ -95,9 +94,13 @@ def login(usuario: UsuarioCriar, session: SessionDep, response: Response):
     if not usuario_db or not verificar_senha(usuario.senha, usuario_db.senha_hash):
         raise HTTPException(status_code=401, detail="credenciais invalidas")
     token = jwt.encode(
-        {"sub": usuario_db.email, "exp": datetime.now(UTC) + timedelta(minutes=30)},
-        SECRET_KEY,
-        algorithm=ALGORITHM,
+        {
+            "sub": usuario_db.email,
+            "exp": datetime.now(UTC)
+            + timedelta(minutes=settings.access_token_expire_minutes),
+        },
+        settings.secret_key,
+        algorithm=settings.algorithm,
     )
     response.set_cookie(key="authToken", value=token, httponly=True, max_age=1800)
     return {"access_token": token, "token_type": "bearer"}
