@@ -42,6 +42,7 @@ uv run pre-commit install    # reativa os hooks de pré-commit
 | 9 | CRUD completo + organização: `PUT`/`DELETE`, `204 No Content`, `response_model` (DTO de saída, filtra campos), `APIRouter` + `include_router` (rotas em módulo próprio) | ✅ |
 | 10 | Banco de dados: SQLite + SQLModel, `table=True`, `engine`, `Session`, `Depends` para injeção, `session.add/commit/refresh/delete`, modelo base vs modelo de tabela (`CategoriaBase` + `Categoria`), `lifespan` para inicializar o banco | ✅ |
 | 11 | Relacionamentos: `foreign_key`, `Relationship(back_populates=)`, ordem das classes importa (sem forward ref), `selectinload` para eager loading, `TarefaComCategoria` como DTO de leitura aninhado, `IntegrityError` para FK violada | ✅ |
+| 12 | Autenticação JWT: `bcrypt` para hash de senha, `jose` para gerar/verificar token, `HTTPBearer` + `Depends` para proteger rotas, cookie `httponly` + header Bearer (suporte mobile e web), `OAuth2PasswordRequestForm` | ✅ |
 
 Exercícios resolvidos em `fundamentos/` (cada um tem `.md` com o enunciado + `.py`
 com a solução): **exercicio01 a exercicio09**, + exercicio10/11 (`.md`) = a **API** em
@@ -65,13 +66,13 @@ para separar "código que roda" de "código importável".
 
 ## Próximo passo
 
-➡️ 🔐 **Aula 12 — Autenticação com JWT**. A API está aberta — qualquer um pode criar,
-editar e deletar. Próximos temas:
-1. **Hashing de senha** com `passlib` (`bcrypt`) — nunca guardar senha em texto puro.
-2. **JWT** (`python-jose`) — gerar token no login, assinar com secret key.
-3. **Rota de login** (`POST /auth/login`) que valida usuário e devolve o token.
-4. **Depends de autenticação** — proteger rotas com `Depends(get_current_user)`.
-5. Modelo `Usuario` no banco (email + senha hasheada).
+➡️ 🧪 **Aula 13 — Testes automatizados com pytest**. A API está funcional mas sem
+cobertura de testes. Próximos temas:
+1. **pytest** básico — estrutura de teste, `assert`, fixtures.
+2. **TestClient** do FastAPI — testar endpoints sem subir o servidor.
+3. **Banco em memória** para testes — SQLite `:memory:` para isolar cada teste.
+4. Testar fluxo de autenticação: registro → login → rota protegida.
+5. Testar casos de erro: 404, 401, 422.
 
 > A API atual roda com: `uv run fastapi dev fundamentos/api/main.py` → abrir `/docs`.
 
