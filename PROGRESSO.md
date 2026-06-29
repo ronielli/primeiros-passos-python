@@ -49,11 +49,12 @@ uv run pre-commit install    # reativa os hooks de pré-commit
 | 16 | 🗃️ Migrations com Alembic: `create_all` cria mas nunca **altera** → migrations versionadas, `alembic init` + `env.py` (apresentar `SQLModel.metadata` e a URL do `settings`), ciclo muda modelo → `revision --autogenerate` → **revisa** → `upgrade head`, corrente `revision`/`down_revision` + `alembic_version` (1 linha = head), `downgrade`/`upgrade` (arquivo=receita, banco=prato), default Python (`= 0`) ≠ `server_default` (banco), `nullable` é o add seguro, migrations vão pro git (não o `.db`) | ✅ |
 | 17 | 🧹 Limpeza de tipos (mypy zerado): container vazio (`[]`) precisa de anotação (mypy não infere), dict heterogêneo vira `dict[str, object]` → `TypedDict` (≈ `interface` do TS) p/ descrever a forma, `# type: ignore[código]` estreito+comentado p/ falso-positivo de lib (vale p/ mypy E pyright). Regra: info que falta é SUA → anota; info errada vem da LIB → suprime | ✅ |
 | 18 | 🔬 Testes avançados: **cobertura** (`pytest-cov`, `--cov-report=term-missing` = mapa de pontos cegos; alta ≠ correto), `parametrize` (1 teste, N entradas ≈ `test.each`), `monkeypatch` (troca atributo só no teste, desfaz sozinho ≈ `jest.spyOn`) p/ token JWT expirado (`access_token_expire_minutes = -1`), `engine.dispose()` no teardown (mata ResourceWarning), `--cov-fail-under` (guard rail de CI). 26 testes, 83% | ✅ |
+| 19 | 🐳 Docker: Dockerfile (receita) → image (artefato) → container (rodando), base `ghcr.io/astral-sh/uv`, cache de camadas (copiar deps antes do código ≈ `COPY package.json`), `--host 0.0.0.0` (senão inacessível de fora), `.dockerignore` (não copiar `.env`/`.db`/`.venv`), segredo via `-e` no run (não na imagem), `CMD` roda `alembic upgrade` + `fastapi run`, `docker run -p host:container -e VAR --rm`. API completa rodando em container | ✅ |
 
 Exercícios resolvidos em `fundamentos/` (cada um tem `.md` com o enunciado + `.py`
 com a solução): **exercicio01 a exercicio09**, + exercicio10/11 (`.md`) = a **API** em
 `fundamentos/api/` (CRUD completo de tarefas em memória, organizado com `APIRouter`).
-Exercício 12: CRUD de categorias com SQLModel. Exercício 13: relacionamentos FK + Relationship, DTO aninhado, eager loading. Exercício 14: autenticação JWT. Exercício 15: testes com pytest (`tests/conftest.py` com fixtures `session`/`client` + `dependency_overrides`, `tests/test_tarefas.py` e `tests/test_auth.py` cobrindo CRUD, auth e casos de erro — 12 testes passando). Exercício 16: configuração com `pydantic-settings` (`api/config.py` com `Settings(BaseSettings)`, `.env` + `.env.example`, `SECRET_KEY`/`DATABASE_URL`/expiração saíram do código). Exercício 17: DTO de saída `UsuarioPublico` (para de vazar `senha_hash` nas respostas) + testes de não-vazamento. Exercício 18: migrations com Alembic (`alembic/` com `env.py` ligado ao `SQLModel.metadata` + `settings.database_url`, 3 migrations: schema inicial, `descricao` na categoria, `prioridade` na tarefa com `server_default`); `create_all` saiu do `lifespan` (só os testes usam). Exercício 19: limpeza de tipos — mypy zerado (`TypedDict` em ex03/04, `list[str]` nas contas, `# type: ignore[arg-type]` no selectinload). Exercício 20: testes avançados — `tests/test_categorias.py` (CRUD), `parametrize` (rotas protegidas) e `monkeypatch` (token expirado) no test_auth, cobertura 76%→83% com `poe cov` (`--cov-fail-under=80`).
+Exercício 12: CRUD de categorias com SQLModel. Exercício 13: relacionamentos FK + Relationship, DTO aninhado, eager loading. Exercício 14: autenticação JWT. Exercício 15: testes com pytest (`tests/conftest.py` com fixtures `session`/`client` + `dependency_overrides`, `tests/test_tarefas.py` e `tests/test_auth.py` cobrindo CRUD, auth e casos de erro — 12 testes passando). Exercício 16: configuração com `pydantic-settings` (`api/config.py` com `Settings(BaseSettings)`, `.env` + `.env.example`, `SECRET_KEY`/`DATABASE_URL`/expiração saíram do código). Exercício 17: DTO de saída `UsuarioPublico` (para de vazar `senha_hash` nas respostas) + testes de não-vazamento. Exercício 18: migrations com Alembic (`alembic/` com `env.py` ligado ao `SQLModel.metadata` + `settings.database_url`, 3 migrations: schema inicial, `descricao` na categoria, `prioridade` na tarefa com `server_default`); `create_all` saiu do `lifespan` (só os testes usam). Exercício 19: limpeza de tipos — mypy zerado (`TypedDict` em ex03/04, `list[str]` nas contas, `# type: ignore[arg-type]` no selectinload). Exercício 20: testes avançados — `tests/test_categorias.py` (CRUD), `parametrize` (rotas protegidas) e `monkeypatch` (token expirado) no test_auth, cobertura 76%→83% com `poe cov` (`--cov-fail-under=80`). Exercício 21: Docker — `Dockerfile` (base uv, migrations+`fastapi run` no CMD) + `.dockerignore`; `docker build`/`run` com a API completa rodando em container (testado com curl).
 
 Já praticado na prática: `import` entre arquivos, organização em **pacote** (`banco/`
 com `conta.py` + `tipos.py` + `__init__.py` re-exportando), os dois estilos de import
@@ -72,15 +73,16 @@ para separar "código que roda" de "código importável".
 
 ## Próximo passo
 
-➡️ **Aula 19 — a definir.** A API está funcional, **com testes** (26 testes, 83%
-cobertura), config externalizada (`.env`), sem vazar senha_hash, **com migrations
-(Alembic)** e mypy zerado. Candidatos a próximo tema:
-1. **Deploy / Docker** — empacotar a API num container, env vars, `alembic upgrade`
-   no startup (o "como ponho no ar").
-2. Fechar os últimos buracos de cobertura: `PUT /tarefas` e o CRUD de usuário
-   (rotas 50-58 do tarefas.py, 111-127 do usuarios.py).
-3. Melhorias da API anotadas em `project-api-next-steps` (EmailStr, email único,
-   paginação, mover `get_current_user` p/ `auth.py`, filtrar tarefas por usuário).
+➡️ **Aula 20 — a definir.** A API está funcional, **com testes** (26 testes, 83%
+cobertura), config externalizada, sem vazar senha_hash, **com migrations (Alembic)**,
+mypy zerado e **containerizada (Docker)**. Candidatos a próximo tema:
+1. **Deploy real na nuvem** — Fly.io / Railway / Render (subir a imagem Docker que já
+   temos). É o passo que faltou: do container local pro ar de verdade.
+2. **CI com GitHub Actions** — rodar `poe test`/`lint`/`types` a cada push (o repo já
+   tem tudo pronto pra isso).
+3. Fechar buracos de cobertura (`PUT /tarefas`, CRUD de usuário) ou melhorias da API
+   em `project-api-next-steps` (EmailStr, email único, paginação, filtrar por usuário).
+4. Opcional: slim na imagem Docker (multi-stage build; hoje são ~378MB).
 
 ### Ferramentas de produtividade já instaladas (Aula 13)
 
