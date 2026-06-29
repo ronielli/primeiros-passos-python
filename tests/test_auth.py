@@ -5,6 +5,30 @@ import pytest
 enviar_email = Mock()
 
 
+@pytest.mark.parametrize(
+    "metodo, url",
+    [
+        ("get", "/tarefas"),
+        ("get", "/usuarios/me"),
+    ],
+)
+def test_rotas_protegidas_sem_token(client, metodo, url):
+    r = getattr(client, metodo)(url)
+    assert r.status_code == 401
+
+
+def test_me_token_expirado(client, monkeypatch):
+    from config import settings
+
+    client.post("/usuarios", json={"email": "r@g.com", "senha": "1234"})
+    monkeypatch.setattr(settings, "access_token_expire_minutes", -1)  # nasce vencido
+    token = client.post(
+        "/usuarios/login", json={"email": "r@g.com", "senha": "1234"}
+    ).json()["access_token"]
+    r = client.get("/usuarios/me", headers={"Authorization": f"Bearer {token}"})
+    assert r.status_code == 401
+
+
 def test_registro_manda_email(client):
     with patch("routers.usuarios.enviar_email") as email_fake:
         r = client.post("/usuarios", json={"email": "r@g.com", "senha": "1234"})

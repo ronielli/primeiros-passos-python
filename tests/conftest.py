@@ -28,6 +28,7 @@ def session_fixture():
     with Session(engine) as session:
         yield session  # entrega pro teste...
     # ...e o que vem depois do yield é o "teardown" (afterEach)
+    engine.dispose()  # fecha as conexões do engine (sem isso: ResourceWarning)
 
 
 @pytest.fixture(name="client")

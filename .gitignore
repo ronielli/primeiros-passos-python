@@ -17,3 +17,7 @@ __pycache__/
 .DS_Store
 tarefas.db
 *.db
+
+# Dados de cobertura de testes (gerado pelo pytest-cov)
+.coverage
+htmlcov/
