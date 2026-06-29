@@ -1,4 +1,5 @@
 from config import settings
+from pydantic import EmailStr, field_validator
 from sqlalchemy import event
 from sqlmodel import Field, Relationship, Session, SQLModel, create_engine
 
@@ -14,12 +15,19 @@ class Categoria(CategoriaBase, table=True):
 
 
 class UsuarioCriar(SQLModel):
-    email: str
-    senha: str
+    email: EmailStr
+    senha: str = Field(min_length=8)
+
+    @field_validator("senha")
+    @classmethod
+    def senha_tem_numero(cls, v: str) -> str:
+        if not any(c.isdigit() for c in v):
+            raise ValueError("a senha precisa ter pelo menos um número")
+        return v
 
 
 class UsuarioBase(SQLModel):
-    email: str
+    email: EmailStr
     senha_hash: str
 
 
@@ -36,7 +44,7 @@ class TarefaBase(SQLModel):
 
 class UsuarioPublico(SQLModel):
     id: int
-    email: str
+    email: EmailStr
 
 
 class Tarefa(TarefaBase, table=True):
