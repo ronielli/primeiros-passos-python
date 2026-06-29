@@ -16,7 +16,17 @@ class Categoria(CategoriaBase, table=True):
 
 class UsuarioCriar(SQLModel):
     email: EmailStr
-    senha: str = Field(min_length=8)
+    senha: str = Field(
+        min_length=8,
+        description="Mínimo 8 caracteres, com pelo menos um número",
+    )
+
+    # exemplo do corpo inteiro p/ o Swagger (pré-preenche o "Try it out")
+    model_config = {
+        "json_schema_extra": {
+            "examples": [{"email": "ana@exemplo.com", "senha": "senha-1234"}]
+        }
+    }
 
     @field_validator("senha")
     @classmethod
