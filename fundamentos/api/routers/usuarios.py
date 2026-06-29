@@ -1,17 +1,25 @@
 from datetime import UTC, datetime, timedelta
 from typing import Annotated
-from unittest.mock import Mock
 
 import bcrypt
 from config import settings
 from database import Usuario, UsuarioBase, UsuarioCriar, UsuarioPublico, get_session
-from fastapi import APIRouter, Depends, HTTPException, Request, Response
+from fastapi import (
+    APIRouter,
+    BackgroundTasks,
+    Depends,
+    HTTPException,
+    Request,
+    Response,
+)
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import jwt
 from pydantic import BaseModel
 from sqlmodel import Session, select
 
-enviar_email = Mock()
+
+def enviar_email(destino: str) -> None:
+    print(f"📧 enviando e-mail de boas-vindas para {destino}")
 
 
 SessionDep = Annotated[Session, Depends(get_session)]
@@ -75,14 +83,15 @@ def busca(usuario_id: int, session: SessionDep):
 
 
 @router.post("", status_code=201, response_model=UsuarioPublico)
-def criar(usuario: UsuarioCriar, session: SessionDep):
+def criar(usuario: UsuarioCriar, session: SessionDep, tarefas: BackgroundTasks):
     dados = usuario.model_dump()
     dados["senha_hash"] = hash_senha(dados.pop("senha"))
     db_usuario = Usuario.model_validate(dados)
     session.add(db_usuario)
     session.commit()
     session.refresh(db_usuario)
-    enviar_email(db_usuario.email)
+    # email de boas-vindas em segundo plano: responde sem esperar o envio
+    tarefas.add_task(enviar_email, db_usuario.email)
     return db_usuario
 
 
