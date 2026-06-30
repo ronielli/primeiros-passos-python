@@ -5,7 +5,7 @@
 # --- Metadados do projeto (igual ao topo do package.json) -------------------
 [project]
 name = "estudos"
-version = "0.1.0"
+version = "1.0.1"
 description = "Projeto de estudos de Python (backend), vindo de JavaScript"
 readme = "README.md"
 requires-python = ">=3.13"
